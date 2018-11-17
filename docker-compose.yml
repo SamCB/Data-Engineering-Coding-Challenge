@@ -1,0 +1,18 @@
+version: '3'
+services:
+  api:
+    build: ./api
+    volumes:
+      - ./api/:/usr/api/
+
+  scraper:
+    build: ./scraper
+    volumes:
+      - ./scraper/src/:/usr/src/
+
+  db:
+    build:
+      context: ./dev
+      dockerfile: Dockerfile-MongoDB
+    volumes:
+      - ./dev/db/:/data/db/
