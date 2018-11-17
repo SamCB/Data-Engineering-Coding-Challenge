@@ -15,3 +15,17 @@ All services can be pulled and built with:
 ```bash
 docker-compose build
 ```
+
+To enter the API container for development, run
+
+```bash
+docker-compose run --service-ports api bash
+# and if you haven't setup the dependencies yet, inside the container run
+yarn
+```
+
+To enter the scraper container for development run
+
+```bash
+docker-compose run scraper bash
+```
