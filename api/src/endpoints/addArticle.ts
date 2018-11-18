@@ -6,6 +6,10 @@ export interface AddArticleResult {
   article: Article;
 }
 
+class InvalidSecurityKey extends Error {
+  public isSecurityKey: boolean = true;
+}
+
 /**
  * Add the given article to the database
  */
@@ -19,7 +23,7 @@ export async function addArticle(
   data: DataStore,
 ): Promise<AddArticleResult> {
   if (data.keyValidator(key) === false) {
-    throw new Error(`Invalid security key`);
+    throw new InvalidSecurityKey(`Invalid security key`);
   }
   const validArticle = validateArticle(article);
 
