@@ -1,11 +1,14 @@
-import { Article, ArticleStore } from './store/article';
-import { DataStore } from './data';
+import { Article, ArticleStore } from '../store/article';
+import { DataStore } from '../data';
 
 export interface AddArticleResult {
   id: string;
   article: Article;
 }
 
+/**
+ * Add the given article to the database
+ */
 export async function addArticle(
   article: Article,
   key: string,

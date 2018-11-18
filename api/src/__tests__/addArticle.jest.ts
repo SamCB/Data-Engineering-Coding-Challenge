@@ -1,6 +1,6 @@
 import { clone, keys } from 'lodash';
 
-import { addArticle } from '../addArticle';
+import { addArticle } from '../endpoints/addArticle';
 import { Article } from '../store/Article';
 
 import { genMockDataStore, teardownMockDataStore, mockKey, MockDataStore } from './helpers';
