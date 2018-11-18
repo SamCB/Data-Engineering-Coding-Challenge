@@ -1,4 +1,4 @@
-import { createConnection, Connection } from 'mongoose';
+import { set as mongooseSet, createConnection, Connection } from 'mongoose';
 import { randomBytes } from 'crypto';
 import { DataStore } from '../data';
 import { generateArticleStore } from '../store/article';
@@ -23,7 +23,15 @@ export function genMockDataStore(): MockDataStore {
   const prefix = genPrefix();
 
   const connectionAddress = `${LOCAL_DB_ADDRESS}test_${prefix}`;
+
+  // Fix a few depreciation warnings.
+  // see: https://mongoosejs.com/docs/deprecations.html for details
+  mongooseSet('useNewUrlParser', true);
+  mongooseSet('useFindAndModify', false);
+  mongooseSet('useCreateIndex', true);
+
   const conn = createConnection(connectionAddress);
+
   return {
     prefix,
     conn,
@@ -35,9 +43,5 @@ export function genMockDataStore(): MockDataStore {
 };
 
 export async function teardownMockDataStore(dataStore: MockDataStore) {
-  if (dataStore.conn.db) {
-    // If nothing was sucessfully inserted during the test, no database is
-    // going to exist.
-    await dataStore.conn.db.dropDatabase();
-  }
+  await dataStore.conn.dropDatabase();
 }

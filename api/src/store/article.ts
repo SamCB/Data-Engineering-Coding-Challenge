@@ -9,7 +9,8 @@ export interface Article {
   author: string;
   timePublished: number;
   timeUpdated?: number;
-  body: string
+  body: string;
+  keywords: string[];
 }
 
 const joiSchema = Joi.object().keys({
@@ -20,7 +21,8 @@ const joiSchema = Joi.object().keys({
   author: Joi.string().required(),
   timePublished: Joi.number().required(),
   timeUpdated: Joi.number(),
-  body: Joi.string().required()
+  body: Joi.string().required(),
+  keywords: Joi.array().items(Joi.string()).required(),
 });
 
 export function validateArticle(val: any): Article {
@@ -41,7 +43,12 @@ export interface ArticleStore {
 
 export function generateArticleStore(conn: Connection, prefix?: string): ArticleStore {
   const ArticleSchema = new Schema({
-    // Because we want the id to be passed in.
+    // Because we want the id to be passed in so it can be used as the key, and
+    //  we'll have automatic overrides.
+    // Admitadly, manually defining this as a string isn't best practice, but
+    //  it's quick and easy for now. In the future it could be better handled
+    //  with a joint unique index on the publisher and key and some extra logic
+    //  surrounding the handling of collisions.
     _id: String,
     key: String,
     title: String,
@@ -53,7 +60,9 @@ export function generateArticleStore(conn: Connection, prefix?: string): Article
     timePublished: Number,
     timeUpdated: Number,
     body: String,
+    // Convert all keywords to lowercase and trim them
+    keywords: { type: [{type: String, lowercase: true, trim: true}], index: true },
   });
-  const ArticleModel = conn.model<ArticleModel>(`${prefix}Article`, ArticleSchema);
+  const ArticleModel = conn.model<ArticleModel>(`${prefix || ''}Article`, ArticleSchema);
   return { ArticleSchema, ArticleModel };
 }

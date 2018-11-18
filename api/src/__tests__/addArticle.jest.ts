@@ -21,7 +21,8 @@ const val: Article = {
 I'm only using it as a system test.
 
 Want some Unicode? €¶◆← →↑↓①②③😂🤓🤖👨
-`
+`,
+  keywords: ['short', 'important', 'system test', 'Unicode']
 };
 
 beforeEach(() => {
