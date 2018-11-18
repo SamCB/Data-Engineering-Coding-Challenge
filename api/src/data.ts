@@ -1,4 +1,4 @@
-import { createConnection } from 'mongoose';
+import { set as mongooseSet, createConnection } from 'mongoose';
 import { ArticleStore, generateArticleStore } from './store/article';
 
 export interface DataStore {
@@ -21,6 +21,12 @@ if (dbAddress === undefined) {
 }
 
 export function createDataStore(): DataStore {
+  // Fix a few depreciation warnings.
+  // see: https://mongoosejs.com/docs/deprecations.html for details
+  mongooseSet('useNewUrlParser', true);
+  mongooseSet('useFindAndModify', false);
+  mongooseSet('useCreateIndex', true);
+
   const conn = createConnection(dbAddress);
   return {
     keyValidator: (key: string) => key === securityKey,
