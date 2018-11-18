@@ -13,7 +13,7 @@ function genPrefix(): string {
   return randomBytes(10).toString('hex');
 }
 
-const LOCAL_DB_ADDRESS = 'mongodb://db:27501/';
+const LOCAL_DB_ADDRESS = 'mongodb://db:27017/';
 
 export const mockKey = 'abc';
 
@@ -35,5 +35,9 @@ export function genMockDataStore(): MockDataStore {
 };
 
 export async function teardownMockDataStore(dataStore: MockDataStore) {
-  await dataStore.conn.db.dropDatabase();
+  if (dataStore.conn.db) {
+    // If nothing was sucessfully inserted during the test, no database is
+    // going to exist.
+    await dataStore.conn.db.dropDatabase();
+  }
 }

@@ -6,6 +6,11 @@ services:
       - db
     volumes:
       - ./api/:/usr/api/
+    ports:
+      - 3000:3000
+    environment:
+      DB_ADDRESS: 'mongodb://db:27017/dev'
+      SECURITY_KEY: 'topsecret'
 
   scraper:
     build: ./scraper
@@ -20,3 +25,5 @@ services:
       dockerfile: Dockerfile-MongoDB
     volumes:
       - ./dev/db/:/data/db/
+    ports:
+      - 27017:27017
