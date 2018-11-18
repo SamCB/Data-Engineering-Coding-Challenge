@@ -20,3 +20,5 @@ services:
       dockerfile: Dockerfile-MongoDB
     volumes:
       - ./dev/db/:/data/db/
+    ports:
+      - 27017:27017

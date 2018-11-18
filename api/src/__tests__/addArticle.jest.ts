@@ -35,19 +35,15 @@ afterEach(async () => {
 test('addArticle will add the given article to the database', async ()=> {
   const res = await addArticle(val, mockKey, dataStore);
   expect(res.id).toBeDefined();
-  expect(res.article).toBe(val);
+  expect(res.article).toEqual(val);
 });
 
 test('addArticle will throw an error when there is no provided security key', async ()=> {
-  expect(async ()=> {
-    await addArticle(val, undefined, dataStore);
-  }).toThrow();
+  await expect(addArticle(val, undefined, dataStore)).rejects.toThrow();
 });
 
 test('addArticle will throw an error when the security key is incorrect', async ()=> {
-  expect(async ()=> {
-    await addArticle(val, `${mockKey}-oops-not-it`, dataStore);
-  }).toThrow();
+  await expect(addArticle(val, `${mockKey}-oops-not-it`, dataStore)).rejects.toThrow();
 });
 
 // Iterate over each key to remove
@@ -56,9 +52,7 @@ test.each(keys(val))
   const newVal = clone(val);
   delete newVal[key];
 
-  expect(async ()=> {
-    await addArticle(val, mockKey, dataStore);
-  }).toThrow();
+  await expect(addArticle(newVal, mockKey, dataStore)).rejects.toThrow();
 });
 
 test('addArticle will override an old article when given the same article key', async ()=> {
@@ -69,6 +63,6 @@ test('addArticle will override an old article when given the same article key', 
   newVal.author = 'Dr Barfoo';
   newVal.timeUpdated = 1542501981154;
   const resB = await addArticle(newVal, mockKey, dataStore);
-  expect(resB.id).toBe(resA.id);
-  expect(resB.article).toBe(newVal);
+  expect(resB.id).toEqual(resA.id);
+  expect(resB.article).toEqual(newVal);
 });
