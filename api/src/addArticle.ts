@@ -1,5 +1,10 @@
-import { Article, StoredArticle } from './store/article';
+import { Article, ArticleStore } from './store/article';
 import { DataStore } from './data';
+
+export interface AddArticleResult {
+  id: string;
+  article: Article;
+}
 
 export async function addArticle(
   article: Article,
@@ -8,9 +13,6 @@ export async function addArticle(
   //  allows for greater ease and flexibility when testing and developing
   //  locally
   data: DataStore,
-): Promise<StoredArticle> {
-
+): Promise<AddArticleResult> {
 }
 
-export async function getArticle(id: string, key: string): Promise<StoredArticle> {
-}

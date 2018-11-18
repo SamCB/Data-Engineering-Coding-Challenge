@@ -1,6 +1,7 @@
 import { Connection, Document, Schema, Model, model } from 'mongoose';
 
 export interface Article {
+  key: string;
   title: string;
   url: string;
   publisher: string;
@@ -15,7 +16,7 @@ export interface ArticleModel extends Article, Document {
 
 export interface ArticleStore {
   ArticleSchema: Schema;
-  Article: ArticleModel;
+  ArticleModel: ArticleModel;
 }
 
 export function generateArticleStore(conn: Connection, prefix?: string): ArticleStore {

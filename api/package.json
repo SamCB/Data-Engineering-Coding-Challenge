@@ -9,12 +9,14 @@
     "watch": "nodemon --watch 'src/**/*' -e ts --exec 'ts-node' src/server.ts"
   },
   "dependencies": {
+    "lodash": "^4.17.11",
     "mongodb": "^3.1.10",
     "mongoose": "^5.3.12"
   },
   "devDependencies": {
     "@types/es6-shim": "^0.31.39",
     "@types/jest": "^23.3.9",
+    "@types/lodash": "^4.14.118",
     "@types/mongodb": "^3.1.14",
     "@types/mongoose": "^5.3.1",
     "jest": "^23.6.0",
