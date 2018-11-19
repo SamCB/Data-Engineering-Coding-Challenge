@@ -3,11 +3,20 @@ import { createDataStore } from './data';
 
 const PORT = 3000;
 
-const dataStore = createDataStore();
-const app = new App(dataStore).app;
+createDataStore()
+.then(
+  (dataStore) => {
+    console.log('Connected to Database');
 
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
-});
+    const app = new App(dataStore).app;
 
-console.log('Hello World!');
+    app.listen(PORT, () => {
+      console.log(`Listening on port ${PORT}`);
+    });
+  },
+  (err) => {
+    console.log('Something went wrong connecting to database');
+    console.log(err);
+    console.log('HALT');
+  }
+);

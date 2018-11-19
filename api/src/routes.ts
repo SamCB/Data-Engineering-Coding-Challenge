@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import { addArticle } from './endpoints/addArticle';
+import { queryArticle } from './endpoints/queryArticle';
 import { DataStore } from './data';
 
 export class Routes {
@@ -12,8 +13,28 @@ export class Routes {
   }
 
   public routes(app): void {
-    app.route('/article').get((req: Request, res: Response) => {
-      res.status(501).send({message: 'GET on article unavailable'});
+    app.route('/article').get(async (req: Request, res: Response) => {
+      const query = {
+        keywords: req.query.k && req.query.k.split(","),
+        publisher: req.query.publisher,
+        cursor: req.query.cursor
+      };
+      try {
+        const result = await queryArticle(query, this.dataStore);
+        console.log(result);
+        res.status(200).send(result.articles);
+      } catch (e) {
+        if (e.isJoi) {
+          // Input Validation Error
+          res.status(400).send('Invalid query, must have comma seperated keywords for key: "k"');
+        } else if (e.isInvalidCursor) {
+          // Cursor is invalid
+          res.status(400).send(`Cursor: "${req.query.cursor}" is invalid`);
+        } else {
+          // Something else went wrong
+          res.status(501).send('Internal Server Error');
+        }
+      }
     });
     app.route('/article').post(async (req: Request, res: Response) => {
       const key = req.get('key');
