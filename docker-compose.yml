@@ -38,6 +38,7 @@ services:
     env_file: .env
     environment:
       SERVER_PORT: 80
+    restart: on-failure
 
   scraper_prod:
     build: ./scraper
@@ -46,3 +47,4 @@ services:
     env_file: .env
     environment:
       SERVER_PORT: 80
+    restart: on-failure
