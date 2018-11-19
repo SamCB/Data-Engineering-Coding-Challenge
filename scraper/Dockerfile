@@ -11,3 +11,5 @@ RUN python -c "import nltk; nltk.download('stopwords')"
 ADD ./src/ /usr/src/
 
 WORKDIR /usr/src/
+
+CMD python index.py
