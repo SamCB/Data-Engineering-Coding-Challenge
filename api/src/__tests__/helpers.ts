@@ -1,4 +1,6 @@
 import { set as mongooseSet, createConnection, Connection } from 'mongoose';
+import { isEqual } from 'lodash';
+
 import { randomBytes } from 'crypto';
 import { DataStore } from '../data';
 import { generateArticleStore } from '../store/article';
@@ -17,7 +19,7 @@ const LOCAL_DB_ADDRESS = 'mongodb://db:27017/';
 
 export const mockKey = 'abc';
 
-export function genMockDataStore(): MockDataStore {
+export async function genMockDataStore(): Promise<MockDataStore> {
   // We send a random prefix for creating the database, so as to avoid
   // collisions or using old collections by accident.
   const prefix = genPrefix();
@@ -37,7 +39,7 @@ export function genMockDataStore(): MockDataStore {
     conn,
     keyValidator: (key: string) => key === mockKey,
     db: {
-      Article: generateArticleStore(conn, prefix)
+      Article: await generateArticleStore(conn, prefix)
     }
   }
 };
@@ -46,3 +48,11 @@ export async function teardownMockDataStore(dataStore: MockDataStore) {
   await dataStore.conn.dropDatabase();
 }
 
+// Unfortunately we loose the nice jest comparison here, and this isn't a
+// particularly quick method but deep unordered comparison is not supported.
+export function deepCompare(A: any[], B: any[]): boolean {
+  return A.length === B.length
+    && A.every( a => {
+      return B.some( b => isEqual(a, b));
+    });
+}

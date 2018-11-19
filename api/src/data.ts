@@ -20,7 +20,7 @@ if (dbAddress === undefined) {
   throw new Error('FATAL: DB_ADDRESS must be defined in env variables');
 }
 
-export function createDataStore(): DataStore {
+export async function createDataStore(): Promise<DataStore> {
   // Fix a few depreciation warnings.
   // see: https://mongoosejs.com/docs/deprecations.html for details
   mongooseSet('useNewUrlParser', true);
@@ -31,7 +31,7 @@ export function createDataStore(): DataStore {
   return {
     keyValidator: (key: string) => key === securityKey,
     db: {
-      Article: generateArticleStore(conn)
+      Article: await generateArticleStore(conn)
     }
   }
 }
