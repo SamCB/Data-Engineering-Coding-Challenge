@@ -1,7 +1,7 @@
 # News Site Scraper
 My entry to the [Isentia Data Engineering Coding Challenge](https://github.com/Isentia/Coding-Challenge/blob/master/Data-Engineer-Coding-Challenge.md).
 
-It attempts to scrape the last few months of news articles from [abc.net.au](abc.net.au),
+It attempts to scrape the last few months of news articles from [abc.net.au](https://abc.net.au),
 extract keywords, and present a public api for usage.
 
 For example:
@@ -55,7 +55,7 @@ cp .env.example .env
 ```
 
 And update the values.
-If you are using an external service such as [compose](www.compose.com), update the address
+If you are using an external service such as [compose](http://www.compose.com), update the address
 according to the [mongo connection string format](https://docs.mongodb.com/manual/reference/connection-string/).
 A local mongo instance is provided as a docker container and is accessible from the api container via `db:27017`.
 
