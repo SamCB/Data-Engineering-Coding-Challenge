@@ -9,3 +9,4 @@ WORKDIR /usr/api/
 
 RUN yarn
 
+CMD yarn start

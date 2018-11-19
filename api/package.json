@@ -4,6 +4,7 @@
   "author": "Sam CB",
   "license": "UNLICENSED",
   "scripts": {
+    "start": "ts-node src/server.ts",
     "test": "jest",
     "test:watch": "jest --watchAll",
     "watch": "nodemon --watch 'src/**/*' -e ts --exec 'ts-node' src/server.ts"
