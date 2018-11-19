@@ -4,6 +4,8 @@ from datetime import datetime
 from scrapy.selector import Selector
 from readability import Document
 
+from keywords import gen_keywords
+
 def htmlParser(htmlContent):
     """
     An HTML Parser for http:/abc.net.au
@@ -22,12 +24,14 @@ def htmlParser(htmlContent):
     time_published = _first_post_time(global_sel)
     author = _author(global_sel)
 
+    keywords = gen_keywords(body)
+
     return {
         "title": title,
         "body": body,
         "author": author,
         "timePublished": time_published,
-        "keywords": []
+        "keywords": keywords
     }
 
 def _first_post_time(sel):
