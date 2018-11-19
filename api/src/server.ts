@@ -1,7 +1,7 @@
 import App from './app';
 import { createDataStore } from './data';
 
-const PORT = 3000;
+const PORT = process.env.SERVER_PORT;
 
 createDataStore()
 .then(
