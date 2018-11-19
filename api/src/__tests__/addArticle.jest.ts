@@ -25,8 +25,8 @@ Want some Unicode? €¶◆← →↑↓①②③😂🤓🤖👨
   keywords: ['short', 'important', 'system test', 'Unicode']
 };
 
-beforeEach(() => {
-  dataStore = genMockDataStore();
+beforeEach(async () => {
+  dataStore = await genMockDataStore();
 });
 
 afterEach(async () => {

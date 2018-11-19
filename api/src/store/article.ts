@@ -36,12 +36,26 @@ export function validateArticle(val: any): Article {
 export interface ArticleModel extends Article, Document {
 }
 
+export function articleModelToArticle(m: ArticleModel): Article {
+  return {
+    key: m.key,
+    title: m.title,
+    url: m.url,
+    publisher: m.publisher,
+    author: m.author,
+    ... m.timeUpdated ? { timeUpdated: m.timeUpdated } : {},
+    timePublished: m.timePublished,
+    body: m.body,
+    keywords: m.keywords,
+  }
+}
+
 export interface ArticleStore {
   ArticleSchema: Schema;
   ArticleModel: Model<ArticleModel>;
 }
 
-export function generateArticleStore(conn: Connection, prefix?: string): ArticleStore {
+export async function generateArticleStore(conn: Connection, prefix?: string): Promise<ArticleStore> {
   const ArticleSchema = new Schema({
     // Because we want the id to be passed in so it can be used as the key, and
     //  we'll have automatic overrides.
@@ -64,5 +78,6 @@ export function generateArticleStore(conn: Connection, prefix?: string): Article
     keywords: { type: [{type: String, lowercase: true, trim: true}], index: true },
   });
   const ArticleModel = conn.model<ArticleModel>(`${prefix || ''}Article`, ArticleSchema);
+  await ArticleModel.ensureIndexes();
   return { ArticleSchema, ArticleModel };
 }

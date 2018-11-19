@@ -5,7 +5,13 @@ import { queryArticle } from '../endpoints/queryArticle';
 import { addArticle } from '../endpoints/addArticle';
 import { Article } from '../store/Article';
 
-import { genMockDataStore, teardownMockDataStore, mockKey, MockDataStore } from './helpers';
+import {
+  genMockDataStore,
+  teardownMockDataStore,
+  mockKey,
+  MockDataStore,
+  deepCompare,
+} from './helpers';
 
 let dataStore: MockDataStore;
 
@@ -53,7 +59,7 @@ const vals: Article[] = [
 ];
 
 beforeEach(async () => {
-  dataStore = genMockDataStore();
+  dataStore = await genMockDataStore();
   await Promise.all(vals.map(val => addArticle(val, mockKey, dataStore)));
 });
 
@@ -63,14 +69,12 @@ afterEach(async () => {
 
 test('query on one keyword returns all articles with that keyword', async () => {
   const result = await queryArticle({keywords: ['important']}, dataStore);
-  expect(result.articles).toEqual(expect.arrayContaining([vals[0], vals[1], vals[3]]));
-  expect(result.articles).toHaveLength(3);
+  expect(deepCompare([vals[0], vals[1], vals[3]], result.articles)).toBeTruthy();
 });
 
 test('query on multiple keywords returns all articles with all keywords', async () => {
   const result = await queryArticle({keywords: ['important', 'short']}, dataStore);
-  expect(result.articles).toEqual(expect.arrayContaining([vals[0], vals[3]]));
-  expect(result.articles).toHaveLength(2);
+  expect(deepCompare([vals[0], vals[3]], result.articles)).toBeTruthy();
 });
 
 test('query with specified publisher returns only articles from that publisher', async () => {
@@ -78,12 +82,11 @@ test('query with specified publisher returns only articles from that publisher',
     {keywords: ['important'], publisher: 'example.com'},
     dataStore
   );
-  expect(result.articles).toEqual(expect.arrayContaining([vals[0], vals[1]]));
-  expect(result.articles).toHaveLength(3);
+  expect(deepCompare([vals[0], vals[1]], result.articles)).toBeTruthy();
 });
 
 test('query result contains the given query', async () => {
-  const query = {keywords: ['important', 'strange'], cursor: 'abc', publisher: 'foobar'};
+  const query = {keywords: ['important', 'strange'], publisher: 'foobar'};
   const result = await queryArticle(query, dataStore);
   expect(result.query).toEqual(query);
 });
@@ -106,6 +109,10 @@ describe('more than 10 matching articles', () => {
   beforeEach(async () => {
     generatedArticles = range(25).map(i => genArticle(i));
     await Promise.all(generatedArticles.map(a => addArticle(a, mockKey, dataStore)));
+  });
+
+  test('invalid query raises error', async () => {
+    await expect(queryArticle({}, dataStore)).rejects.toThrow();
   });
 
   test('query on one keyword returns 10 articles', async () => {
@@ -133,7 +140,7 @@ describe('more than 10 matching articles', () => {
     );
     const articles = [...resultA.articles, ...resultB.articles, ...resultC.articles];
 
-    expect(articles).toEqual(expect.arrayContaining(generatedArticles));
+    expect(deepCompare(generatedArticles, articles)).toBeTruthy();
     expect(articles).toHaveLength(25);
   });
   test('query on multiple keywords returns 10 articles', async () => {
@@ -157,8 +164,7 @@ describe('more than 10 matching articles', () => {
     );
     const articles = [...resultA.articles, ...resultB.articles, ...resultC.articles];
 
-    expect(articles).toEqual(expect.arrayContaining(generatedArticles));
-    expect(articles).toHaveLength(25);
+    expect(deepCompare(generatedArticles, articles)).toBeTruthy();
   });
   
 });
