@@ -22,7 +22,10 @@ export class Routes {
       try {
         const result = await queryArticle(query, this.dataStore);
         console.log(result);
-        res.status(200).send(result.articles);
+        res.status(200).send({
+          articles: result.articles,
+          ...(result.cursor ? {cursor: result.cursor} : {})
+        });
       } catch (e) {
         if (e.isJoi) {
           // Input Validation Error
