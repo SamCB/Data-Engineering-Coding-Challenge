@@ -3,7 +3,7 @@ import os
 
 from parser import htmlParser
 
-example_html_file = os.path.join(os.path.dirname(__file__), './example.html')
+example_html_file = os.path.join(os.path.dirname(__file__), './exampleHtml.txt')
 example_body_file = os.path.join(os.path.dirname(__file__), './exampleBody.txt')
 
 with open(example_html_file, 'r') as f:
