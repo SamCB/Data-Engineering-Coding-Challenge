@@ -1,0 +1,2 @@
+def htmlParser(htmlContent):
+    pass
