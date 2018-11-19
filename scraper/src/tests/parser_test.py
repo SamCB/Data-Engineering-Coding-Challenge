@@ -1,11 +1,15 @@
 import unittest
+import os
 
-from ..parser import htmlParser
+from parser import htmlParser
 
-with open('./example.html', 'r') as f:
+example_html_file = os.path.join(os.path.dirname(__file__), './example.html')
+example_body_file = os.path.join(os.path.dirname(__file__), './exampleBody.txt')
+
+with open(example_html_file, 'r') as f:
     test_content = f.read()
 
-with open('./exampleBody.txt', 'r') as f:
+with open(example_body_file, 'r') as f:
     test_body = f.read()
 
 class TestHtmlParser(unittest.TestCase):
@@ -22,7 +26,7 @@ class TestHtmlParser(unittest.TestCase):
         )
         self.assertEqual(
             result['timePublished'],
-            1542585771
+            1542625371
         )
         self.assertEqual(
             result['body'],
